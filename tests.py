@@ -2,7 +2,7 @@
 
 import weakref
 
-class Test(object):
+class TestCase(object):
   """An abstract unit test."""
   name = ""
 
@@ -23,7 +23,7 @@ class Test(object):
     """Clean up after the test."""
     raise NotImplementedError("Forgot to override a method.")
 
-class TestSet(object):
+class TestSuite(object):
   """A set of unit tests."""
   name = ""
   tests = [] # In order, first to last.
@@ -32,22 +32,24 @@ class TestSet(object):
     self.tests = tests
 
   def addTest(self, test):
-    """Add a unit test to the set."""
+    """Add a unit test to the suite."""
     self.tests.append(test)
 
   def setup(self):
-    """Set up the test set."""
+    """Set up the test suite."""
     pass
 
   def run(self):
-    """Perform the tests in the set."""
+    """Perform the tests in the suite."""
     for test in self.tests:
       test.setup()
-      test.run()
-      test.cleanup()
+      try:
+        test.run()
+      finally:
+        test.cleanup()
 
   def cleanup(self):
-    """Clean up after the test set."""
+    """Clean up after the test suite."""
     pass
 
 class TestFailure(Exception):
