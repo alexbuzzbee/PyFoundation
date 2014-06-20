@@ -11,7 +11,7 @@ class MessageRouter(object):
   """Passes Messages between objects."""
   __messages = []
   __listeners = []
-  __lock = None # RLock
+  __lock = None # threading.RLock
 
   def __init__(self):
     self.__lock = threading.RLock()
@@ -70,7 +70,7 @@ class Message(object):
 class MessageListener(object):
   """Used by objects to be alerted of messages."""
   name = ""
-  posted = None # Weak reference to a threading.Event object.
+  posted = None # Weak reference to threading.Event.
   postedMessageIdx = 0
 
   def __init__(self, messageName, postedEvent):
