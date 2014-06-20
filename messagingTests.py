@@ -1,5 +1,7 @@
 import messaging
 import threading
+import tests
+import time
 
 class Sender(object):
   messageRouter = None # The message router to use.
@@ -29,16 +31,38 @@ class Receiver(object):
   def __receiver(self):
     while True:
       self.messageEvent.wait()
-      print("Received message: " + self.messageRouter.fetchMessage(self.messageRouter.getListener(self.listenerIdx).postedMessageIdx).name)
+      messageName = self.messageRouter.fetchMessage(self.messageRouter.getListener(self.listenerIdx).postedMessageIdx).name
+      with open("log.txt", "w") as file:
+        file.write(messageName + "\n")
       self.messageEvent.clear()
 
+class MessagingTest(tests.TestCase):
+  name = "MessagingTest"
+
+  def setup(self):
+    self.router = messaging.MessageRouter()
+    self.receiver = Receiver(self.router)
+    self.sender = Sender(self.router)
+
+  def run(self):
+    self.receiver.startListening("aMessage")
+    self.sender.sendMessage("aMessage")
+    time.sleep(0.05)
+    with open("log.txt", "r") as file:
+      if file.readline() == "aMessage\n":
+        pass
+      else:
+        self.fail("Message not received, or had wrong name.")
+
+  def cleanup(self):
+    del self.router
+    del self.receiver
+    del self.sender
+
 def test():
-  print("Starting test...")
-  router = messaging.MessageRouter()
-  receiver = Receiver(router)
-  sender = Sender(router)
-  receiver.startListening("aMessage")
-  sender.sendMessage("aMessage")
+  test = MessagingTest()
+  suite = tests.TestSuite([test])
+  suite.run()
 
 if __name__ == "__main__":
   test()
