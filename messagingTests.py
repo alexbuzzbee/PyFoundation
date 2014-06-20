@@ -1,6 +1,7 @@
 import messaging
 import threading
 import tests
+import time
 
 class Sender(object):
   messageRouter = None # The message router to use.
@@ -40,14 +41,17 @@ class MessagingTest(tests.TestCase):
 
   def setup(self):
     self.router = messaging.MessageRouter()
-    self.receiver = Receiver(router)
-    self.sender = Sender(router)
+    self.receiver = Receiver(self.router)
+    self.sender = Sender(self.router)
 
   def run(self):
-    receiver.startListening("aMessage")
-    sender.sendMessage("aMessage")
+    self.receiver.startListening("aMessage")
+    self.sender.sendMessage("aMessage")
+    time.sleep(0.05)
     with open("log.txt", "r") as file:
-      if file.readline() != "aMessage":
+      if file.readline() == "aMessage\n":
+        pass
+      else:
         self.fail("Message not received, or had wrong name.")
 
   def cleanup(self):
