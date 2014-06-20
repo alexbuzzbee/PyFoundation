@@ -67,4 +67,4 @@ class TestFailure(Exception):
     return self.testFailed()
 
   def __str__(self):
-    return "Unit test failed. Reason: " + self.reason
+    return "Unit test" + self.testFailed().name + "failed. Reason: " + self.reason
