@@ -76,15 +76,3 @@ class MessageListener(object):
   def __init__(self, messageName, postedEvent):
     self.name = messageName
     self.posted = weakref.ref(postedEvent)
-
-def selfTest():
-  eventObject = threading.Event()
-  messageRouter = MessageRouter()
-  messageRouter.createRegister("aMessage", eventObject)
-  messageRouter.createPostMessage("aMessage", messageRouter)
-  if eventObject.is_set() == True:
-    print(messageRouter.fetchMessage(messageRouter.getListener(0).postedMessageIdx).name)
-    eventObject.clear()
-  else:
-    raise Exception("Unit test failed: Event object was not set on message send.")
-  return messageRouter
