@@ -8,37 +8,39 @@ except ImportError:
 
 class WorkQueue(object):
   """A queue of 'work objects' to be executed on worker threads."""
-  queue = None
-  workers = 1
-  workerThreads = []
+  __queue = None
+  __workers = 1
+  __workerThreads = []
 
   def __init__(self, maxsize=0, workers=1):
-    self.queue = queue.Queue(maxsize)
-    self.workers = workers
+    self.__queue = queue.Queue(maxsize)
+    self.__workers = workers
 
   def isEmpty(self):
     """Alias to Queue.empty()."""
-    return self.queue.empty()
+    return self.__queue.empty()
 
   def add(self, item, blocking=True):
     """Adds a work item to the queue"""
-    self.queue.put(item, blocking)
+    self.__queue.put(item, blocking)
 
   def start(self):
     """Starts the queue by spawning worker threads."""
-    while len(self.workerThreads) < self.workers:
+    while len(self.__workerThreads) < self.__workers:
       newThread = threading.Thread(target=self._worker)
+      self.__lastAdded = len(self.__workerThreads) - 1
       newThread.start()
-      self.workerThreads.append(newThread)
+      self.__workerThreads.append(newThread)
 
   def join(self):
     """Alias to Queue.join()"""
-    self.queue.join()
+    self.__queue.join()
 
   def __worker(self):
     """Entry point for a worker thread. Loops until its queue is empty, retrieving and executing a work item each time."""
+    myID = self.__lastAdded
     while self.isEmpty() != True:
-      workObject = self.queue.get()
+      workObject = self.__queue.get()
       try:
         if workObject.start() == False:
           raise Exception("Work object should be reinserted.")
@@ -46,7 +48,8 @@ class WorkQueue(object):
         self.add(workObject)
       except NoReinsertException: pass
       finally:
-        self.queue.task_done()
+        self.__queue.task_done()
+    del self.__workerThreads[myID] # Remove current thread from worker threads array.
 
 class WorkObject(object):
   """An abstract work object."""
