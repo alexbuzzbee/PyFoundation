@@ -4,6 +4,6 @@ debugMode = False
 
 def importAll():
   """Import all the things!"""
-  import messaging
-  import utils
-  import workQueue
+  from . import messaging
+  from . import utils
+  from . import workQueue

@@ -46,7 +46,7 @@ class TestSuite(object):
       try:
         test.run()
       except TestFailure as testFail:
-        print(str(testFail))
+        print((str(testFail)))
       finally:
         test.cleanup()
 

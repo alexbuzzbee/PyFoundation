@@ -1,6 +1,6 @@
 """Allows queueing of tasks to be run on secondary threads."""
 
-import Queue
+import queue
 try:
   import threading
 except ImportError:
@@ -13,7 +13,7 @@ class WorkQueue(object):
   workerThreads = []
 
   def __init__(self, maxsize=0, workers=1):
-    self.queue = Queue.Queue(maxsize)
+    self.queue = queue.Queue(maxsize)
     self.workers = workers
 
   def isEmpty(self):

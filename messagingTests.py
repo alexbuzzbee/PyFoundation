@@ -1,6 +1,6 @@
-import messaging
+from . import messaging
 import threading
-import tests
+from . import tests
 import time
 
 class Sender(object):

@@ -1,7 +1,7 @@
 """Provides inter-object messaging."""
 
 import weakref
-import utils
+from . import utils
 try:
   import threading
 except ImportError:
