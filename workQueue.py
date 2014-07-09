@@ -36,7 +36,7 @@ class WorkQueue(object):
     """Alias to Queue.join()"""
     self.__queue.join()
 
-  def __worker(self):
+  def _worker(self):
     """Entry point for a worker thread. Loops until its queue is empty, retrieving and executing a work item each time."""
     myID = self.__lastAdded
     while self.isEmpty() != True:

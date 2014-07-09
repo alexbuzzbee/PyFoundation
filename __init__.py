@@ -2,8 +2,4 @@
 
 debugMode = False
 
-def importAll():
-  """Import all the things!"""
-  from . import messaging
-  from . import utils
-  from . import workQueue
+__all__ = ["messaging", "workQueue", "logging", "utils", "tests"]
