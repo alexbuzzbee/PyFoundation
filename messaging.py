@@ -2,6 +2,7 @@
 
 import weakref
 from . import utils
+from . import logging
 try:
   import threading
 except ImportError:
@@ -24,13 +25,17 @@ class MessageRouter(object):
   def postMessage(self, message):
     """Post an existing Message to the MessageRouter. Returns the index of the message."""
     self.__lock.acquire() # Get exclusive access.
+    if logging.ready: logging.log("Acquired message router lock, ready to add message.", logging.DEBUG)
     self.__messages.append(message)
     index = utils.highestIdx(self.__listeners) # Get the highest index, i.e., the index of the posted message.
+    if logging.ready: logging.log("Triggering listeners...", logging.DEBUG)
     for listener in self.__listeners: # Alert listeners to the message.
       if listener.name == message.name:
         listener.posted().set()
         listener.postedMessageIdx = index
+    if logging.ready: logging.log("Message with name " + message.name + ", data " + str(message.data) + " posted.", logging.INFO)
     self.__lock.release() # Release exclusive access.
+    if logging.ready: logging.log("Released message router lock.", logging.DEBUG)
     return index
 
   def fetchMessage(self, messageIdx):
@@ -45,9 +50,12 @@ class MessageRouter(object):
   def register(self, listenerObject):
     """Register an existing MessageListener object. Returns the index of the listener."""
     self.__lock.acquire()
+    if logging.ready: logging.log("Acquired message router lock, ready to add listener.", logging.DEBUG)
     self.__listeners.append(listenerObject)
     index = utils.highestIdx(self.__listeners)
+    if logging.ready: logging.log("Listener added for message name " + listenerObject.name + ".", logging.INFO)
     self.__lock.release()
+    if logging.ready: logging.log("Released message router lock.", logging.DEBUG)
     return index
 
   def getListener(self, index):

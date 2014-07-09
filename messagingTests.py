@@ -1,7 +1,11 @@
 from . import messaging
-import threading
 from . import tests
+from . import logging
 import time
+try:
+  import threading
+except ImportError:
+  import dummy_threading as threading
 
 class Sender(object):
   messageRouter = None # The message router to use.
@@ -60,6 +64,7 @@ class MessagingTest(tests.TestCase):
     del self.sender
 
 def test():
+  logging.init(level=logging.DEBUG, filename="messagingTest.log")
   test = MessagingTest()
   suite = tests.TestSuite([test])
   suite.run()
