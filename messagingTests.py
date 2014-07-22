@@ -53,9 +53,7 @@ class MessagingTest(tests.TestCase):
     self.sender.sendMessage("aMessage")
     time.sleep(0.05)
     with open("log.txt", "r") as file:
-      if file.readline() == "aMessage\n":
-        pass
-      else:
+      if file.readline() != "aMessage\n":
         self.fail("Message not received, or had wrong name.")
 
   def cleanup(self):

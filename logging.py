@@ -11,7 +11,7 @@ CRITICAL = coreLogging.CRITICAL
 ready = False
 
 def init(level=INFO, filename=None):
-  """Initialize logging. If filename is specified, console output will be disabled. Level is INFO by default."""
+  """Initialize logging. If filename is specified, console output will be disabled. Minimum level is INFO by default."""
   global ready
   if filename != None:
     coreLogging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=level, filename=filename, filemode="w")

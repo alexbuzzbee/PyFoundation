@@ -44,9 +44,9 @@ class WorkQueue(object):
       try:
         if workObject.start() == False:
           raise Exception("Work object should be reinserted.")
+      except NoReinsertException: pass
       except Exception:
         self.add(workObject)
-      except NoReinsertException: pass
       finally:
         self.__queue.task_done()
     del self.__workerThreads[myID] # Remove current thread from worker threads array.
