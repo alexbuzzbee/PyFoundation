@@ -1,6 +1,7 @@
 """Utility functions."""
 
 import os
+import time
 
 def clear():
   """Clears the screen; works on UNIX and Windows."""
@@ -12,3 +13,6 @@ def highestIdx(set):
     return len(set) - 1
   except:
     return None
+
+def yieldThread(): # Yields the processor to another thread
+  time.sleep(0)

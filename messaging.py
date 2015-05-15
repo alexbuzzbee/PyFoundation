@@ -27,12 +27,12 @@ class MessageRouter(object):
     self.__lock.acquire() # Get exclusive access.
     if logging.ready: logging.log("Acquired message router lock, ready to add message.", logging.DEBUG)
     self.__messages.append(message)
-    index = utils.highestIdx(self.__listeners) # Get the highest index, i.e., the index of the posted message.
+    index = utils.highestIdx(self.__listeners) # Get the highest index, i.e., the index of the posted message. Not a race condition, because of the lock.
     if logging.ready: logging.log("Triggering listeners...", logging.DEBUG)
     for listener in self.__listeners: # Alert listeners to the message.
       if listener.name == message.name:
-        listener.posted().set()
         listener.postedMessageIdx = index
+        listener.posted().set()
     if logging.ready: logging.log("Message with name " + message.name + ", data " + str(message.data) + " posted.", logging.INFO)
     self.__lock.release() # Release exclusive access.
     if logging.ready: logging.log("Released message router lock.", logging.DEBUG)

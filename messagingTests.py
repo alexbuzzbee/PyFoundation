@@ -36,6 +36,7 @@ class Receiver(object):
     while True:
       self.messageEvent.wait()
       messageName = self.messageRouter.fetchMessage(self.messageRouter.getListener(self.listenerIdx).postedMessageIdx).name
+      logging.log("Message received: " + messageName, logging.DEBUG)
       with open("log.txt", "w") as file:
         file.write(messageName + "\n")
       self.messageEvent.clear()
