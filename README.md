@@ -1,6 +1,8 @@
 PyFoundation
 ============
 
+***WE HAVE MOVED TO GITLAB <https://gitlab.com/alexbuzzbee/PyFoundation>***
+
 Extends the Python standard library with extra capabilities.
 
 Contribution model
